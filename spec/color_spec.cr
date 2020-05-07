@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe Color do
+describe Term::Color do
   # TODO: Write tests
 
   it "works" do
