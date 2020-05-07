@@ -4,7 +4,7 @@
 
 # Term::Color
 
-![spec status](https://github.com/crystal-term/screen/workflows/specs/badge.svg)
+![spec status](https://github.com/crystal-term/color/workflows/specs/badge.svg)
 
 > Terminal color capabilities detection.
 
