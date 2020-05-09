@@ -24,6 +24,10 @@
 
 ## Usage
 
+```crystal
+require "term-color"
+```
+
 **Term::Screen** allows you to check if your terminal supports color:
 
 ```crystal
@@ -39,7 +43,7 @@ Term::Color.mode      # => 64
 `Term::Color` is just a module so you can easily include it into your own scripts:
 
 ```crystal
-require "color"
+require "term-color"
 
 include Term::Color
 
