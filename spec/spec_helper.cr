@@ -1,2 +1,2 @@
 require "spec"
-require "../src/color"
+require "../src/term-color"
