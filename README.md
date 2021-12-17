@@ -16,7 +16,7 @@
 
    ```yaml
    dependencies:
-     color:
+     term-color:
        github: crystal-term/color
    ```
 
