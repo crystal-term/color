@@ -7,10 +7,15 @@ module Term
     extend self
 
     class_property output : IO::FileDescriptor = STDOUT
+    class_property verbose : Bool = false
 
     # Check if this terminal supports colors
     def support?
       Support.new(ENV.to_h).support?
+    end
+
+    def disabled?
+      Support.new(ENV.to_h, verbose: @@verbose).disabled?
     end
 
     def mode
@@ -32,7 +37,11 @@ module Term
 
     # Check if running on windows. Just false for now.
     def windows?
-      false
+      {% if flag?(:windows) %}
+        true
+      {% else %}
+        false
+      {% end %}
     end
   end
 end
