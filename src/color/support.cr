@@ -52,9 +52,7 @@ module Term
       end
 
       def from_windows_term
-        if ENV["WT_SESSION"]?
-          return true
-        end
+        ENV.has_key?("WT_SESSION") ? true : nil
       end
 
       # Shell out to tput to check color support
@@ -63,7 +61,7 @@ module Term
 
         cmd = `tput colors 2>/dev/null`
         cmd.to_i > 2
-      rescue _e : ArgumentError
+      rescue ArgumentError
         nil
       end
 

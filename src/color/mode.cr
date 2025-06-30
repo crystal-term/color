@@ -56,9 +56,7 @@ module Term
       end
 
       def from_windows_term
-        if Color.windows? && ENV["WT_SESSION"]
-          return TRUECOLORS
-        end
+        Color.windows? && ENV.has_key?("WT_SESSION") ? TRUECOLORS : nil
       end
 
       def from_tput
@@ -66,7 +64,7 @@ module Term
 
         colors = `tput colors 2>/dev/null`.to_i
         colors >= 8 ? colors : nil
-      rescue _e : ArgumentError
+      rescue ArgumentError
         nil
       end
     end
