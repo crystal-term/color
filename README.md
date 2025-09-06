@@ -1,108 +1,86 @@
-# Cor
+<div align="center">
+  <img src="./assets/term-logo.png" alt="term logo">
+</div>
 
-Cor (which means color in Portuguese) is a library for more easily
-working with colors in Crystal. You can think of it as a more
-powerful version of `Colorize`. Cor allows you to very
-easily convert RGB(A) values to hex and back again for
-use in CSS and HTML. It also provides a set of
-chainable methods for creting colorful strings
-for the terminal using truecolor.
+# Term::Color
+
+![spec status](https://github.com/crystal-term/color/workflows/specs/badge.svg)
+
+> Powerful color utilities, truecolor strings, and terminal color capability detection for Crystal.
+
+Term::Color combines two pieces:
+- A rich color API (based on the former cor library) for creating, composing, and formatting colors (hex/rgb, math operations, string helpers).
+- Terminal capability detection (from the original term-color) to determine supported color modes (8/16/52/64/256/24-bit) and general color support in the active terminal.
 
 ## Installation
 
-1. Add the dependency to your `shard.yml`:
+Add this to your application's `shard.yml`:
 
-   ```yaml
-   dependencies:
-     cor:
-       github: watzon/cor
-   ```
+```yaml
+dependencies:
+  term-color:
+    github: crystal-term/color
+```
 
-2. Run `shards install`
+Then run:
+
+```bash
+shards install
+```
 
 ## Usage
 
-### Creating a color
+### 1. Creating Colors
 
 ```crystal
-require "cor"
+require "term-color"
 
-red = Cor.new(255, 0, 0)
-# or you can do
-red = Cor.new("FF0000")
-# or you can also do
-red = Cor.color(:red)
+# Basic RGB
+red = Term::Color.new(255, 0, 0)
+
+# From hex
+red = Term::Color.new("FF0000")
+
+# Named color
+red = Term::Color.color(:red)
+
+# With alpha
+mid_red = Term::Color.new(255, 0, 0, 128)
 ```
 
-You can also include an alpha value
+### 2. Formatting
 
 ```crystal
-mid_red = Cor.new(255, 0, 0, 0.5)
+blue = Term::Color.color(:blue)
+
+# Hex
+puts blue.hex_string            # => 0000ff
+puts blue.hex_string(prefix: true)   # => #0000ff
+puts blue.hex_string(alpha: true)    # => 0000ffff
+puts blue.hex_string(upcase: true)   # => 0000FF
+
+# RGB
+magenta = Term::Color.color(:magenta)
+puts magenta.rgb_string                 # => rgb(255, 0, 255)
+puts magenta.rgb_string(alpha: true)    # => rgb(255, 0, 255, 1)
 ```
 
-### Getting a hex string
+### 3. Math with Colors
 
 ```crystal
-blue = Cor.color(:blue)
-puts blue.hex_string
-# => 0000ff
+puts Term::Color.color(:magenta) - Term::Color.color(:blue)
+# => #<Term::Color ...>
 ```
 
-`#hex_string` also provides a couple of formatting options
+### 4. Truecolor Strings (24-bit)
+
+Most modern terminals support 24-bit color. Term::Color adds chainable String helpers.
 
 ```crystal
-puts blue.hex_string(prefix: true)
-# => #0000ff
-
-puts blue.hex_string(alpha: true)
-# => 0000ffff
-
-puts blue.hex_string(upcase: true)
-# => 0000FF
-```
-
-### Retting a RGB string
-
-```crystal
-magenta = Cor.color(:magenta)
-
-puts magenta.rgb_string
-# => rgb(255, 0, 255)
-
-puts magenta.rgb_string(alpha: true)
-# => rgb(255, 0, 255, 1)
-```
-
-### Math with colors
-
-The `Cor` class includes the basic math methods as well
-which means if, for whatever reason, you want to add,
-subtract, multiply, or divide colors, you can.
-
-```crystal
-puts Cor.color(:magenta) - Cor.color(:blue)
-# => #<Cor:0x7f5892e2df60 @alpha=255, @blue=255, @green=0, @red=0>
-```
-
-### 24 bit truecolor strings
-
-Most modern terminals have support for [True color](https://www.wikiwand.com/en/Color_depth)
-which allows you to add color to your terminal output. Crystal
-already has support for color output via the `Colorize`
-module in the standard library, but Cor takes things
-a step further by allowing you to not only colorize
-your output, but also bold, italicize, underline,
-overline, blink, etc.
-
-Cor also provides a `String` patch that gives the `String` class
-chainable truecolor methods.
-
-```crystal
-require "cor"
-require "cor/string"
+require "term-color"
+require "color/string"
 
 puts "This is awesome!".fore(:blue).back(:white)
-
 puts "Bold me!".bold
 puts "Italic me!".italic
 puts "Strike me!".strike
@@ -112,18 +90,38 @@ puts "Underline me!".underline
 puts "Overline me!".overline
 ```
 
-## Development
+### 5. Terminal Color Capability Detection
 
-TODO: Write development instructions here
+Use the merged capabilities from the original term-color to determine mode and support.
+
+```crystal
+require "term-color"
+
+env = ENV.to_h
+
+# Mode returns a color depth: 0, 8, 16, 52, 64, 256, or 2**24 (24-bit)
+mode = Term::Color::Mode.new(env).mode
+puts "Color mode: #{mode}"
+
+# Support checks whether colors are supported in general
+support = Term::Color::Support.new(env)
+if support.disabled?
+  puts "NO_COLOR set; colors disabled"
+elsif support.support?
+  puts "Terminal supports colors"
+else
+  puts "No color support detected"
+end
+```
 
 ## Contributing
 
-1. Fork it (<https://github.com/watzon/cor/fork>)
+1. Fork it (<https://github.com/crystal-term/color/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
-## Contributors
+## License
 
-- [Chris Watson](https://github.com/watzon) - creator and maintainer
+MIT © [Chris Watson](https://github.com/watzon)
