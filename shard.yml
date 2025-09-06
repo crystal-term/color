@@ -1,9 +1,11 @@
-name: cor
-version: 0.1.0
+name: term-color
+version: 0.4.0
 
 authors:
   - Chris Watson <chris@watzon.tech>
 
-crystal: 0.29.0
+description: Terminal color utilities and truecolor helpers
+
+crystal: ">= 1.0.0"
 
 license: MIT
