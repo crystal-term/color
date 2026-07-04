@@ -356,7 +356,7 @@ module Term
       color_hash = Colors::COLORS.to_a
       colors = 0.upto(string.size - 1).to_a.map { |i| color_hash[i + rand(0..20)][0] }
       string.split("").map_with_index do |c, i|
-        Cor.truecolor_string(c.to_s, colors[i])
+        Term::Color.truecolor_string(c.to_s, colors[i])
       end.join
     end
 
