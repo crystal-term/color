@@ -72,4 +72,33 @@ describe Term::Color do
       result.to_tuple.should eq({50, 0, 4, 1})
     end
   end
+
+  describe "#hex_string" do
+    it "formats prefix, alpha, and uppercase variants" do
+      color = Term::Color.new(255, 136, 0, 255)
+
+      color.hex_string.should eq("ff8800")
+      color.hex_string(prefix: true).should eq("#ff8800")
+      color.hex_string(alpha: true).should eq("ff8800ff")
+      color.hex_string(prefix: true, alpha: true, upcase: true).should eq("#FF8800FF")
+      color.hex_string(alpha: true).size.should eq(8)
+    end
+  end
+
+  describe "#rgb_string" do
+    it "formats rgb and rgba strings" do
+      color = Term::Color.new(10, 20, 30, 128)
+
+      color.rgb_string.should eq("rgb(10, 20, 30)")
+      color.rgb_string(alpha: true).should eq("rgba(10, 20, 30, 0.5)")
+    end
+  end
+
+  describe "#inverse" do
+    it "inverts rgb channels and preserves alpha" do
+      color = Term::Color.new(255, 136, 0, 127)
+
+      color.inverse.to_tuple.should eq({0, 119, 255, 127})
+    end
+  end
 end

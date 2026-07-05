@@ -141,6 +141,7 @@ module Term
     hex = String.build do |str|
       str << "#" if prefix
       str << [@red, @green, @blue].map { |i| sprintf("%02x", i) }.join
+      str << sprintf("%02x", @alpha) if alpha
     end
     hex = hex.upcase if upcase
     hex
@@ -245,9 +246,13 @@ module Term
 
   # Returns a new `Cor` that's the inverse of self.
   def inverse
-    inverted = hex_string(alpha: true).to_i(16) ^ 0x00ffffff
-    inverted = sprintf("%08x", inverted)
-    Term::Color.new(inverted)
+    inverted = ((@red << 16) | (@green << 8) | @blue) ^ 0xffffff
+    Term::Color.new(
+      red: (inverted >> 16) & 0xff,
+      green: (inverted >> 8) & 0xff,
+      blue: inverted & 0xff,
+      alpha: @alpha
+    )
   end
 
   # The HSV (hue / saturation / value) of the color
