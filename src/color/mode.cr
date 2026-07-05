@@ -1,4 +1,5 @@
 # Color capability mode detection (merged from original term-color)
+# Kept for future depth degradation; enabled? currently gates output on/off only.
 class Term::Color::Mode
   TERM_24BIT = /[+-]direct/
   TRUECOLORS = 2**24 # 24-bit color

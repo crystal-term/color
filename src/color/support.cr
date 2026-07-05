@@ -21,35 +21,31 @@ struct Term::Color::Support
     ^ms\-terminal
   /xi
 
-  def initialize(@env : Hash(String, String), @verbose = false)
+  def initialize(@env : Hash(String, String), @verbose = false, @tty : Bool = Term::Color.tty?)
   end
 
   # Detect if terminal supports color
   def support? : Bool
-    return false unless Term::Color.tty?
+    return false unless @tty
 
-    if value = from_term
-      return true unless value.nil?
-    end
+    value = from_term
+    return value unless value.nil?
 
-    if value = from_windows_term
-      return true unless value.nil?
-    end
+    value = from_windows_term
+    return value unless value.nil?
 
-    if value = from_tput
-      return true unless value.nil?
-    end
+    value = from_tput
+    return value unless value.nil?
 
-    if value = from_env
-      return true unless value.nil?
-    end
+    value = from_env
+    return value unless value.nil?
 
     false
   end
 
   # Detect if color support has been disabled with NO_COLOR
   def disabled? : Bool
-    no_color = ENV["NO_COLOR"]?
+    no_color = @env["NO_COLOR"]?
     !(no_color.nil? || no_color.empty?)
   end
 
@@ -63,7 +59,7 @@ struct Term::Color::Support
   end
 
   def from_windows_term : Bool?
-    ENV.has_key?("WT_SESSION") ? true : nil
+    @env.has_key?("WT_SESSION") ? true : nil
   end
 
   # Check via tput
@@ -72,7 +68,7 @@ struct Term::Color::Support
     begin
       cmd = `tput colors 2>/dev/null`
       cmd.to_i > 2 ? true : nil
-    rescue ArgumentError
+    rescue
       nil
     end
   end

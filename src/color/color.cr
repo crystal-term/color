@@ -5,7 +5,26 @@ module Term
     include Comparable(Color)
     include Term::Color::Colors
 
+  @@enabled : Bool? = nil
+
   ANSI_COLOR_REGEXP = /\x1b+(\[|\[\[)[0-9;:?]+m/m
+
+  def self.enabled? : Bool
+    @@enabled = compute_enabled if @@enabled.nil?
+    @@enabled.not_nil!
+  end
+
+  # Set to nil to reset to terminal capability auto-detection.
+  def self.enabled=(value : Bool?)
+    @@enabled = value
+  end
+
+  private def self.compute_enabled : Bool
+    support = Support.new(ENV.to_h)
+    !support.disabled? && support.support?
+  rescue
+    tty?
+  end
 
   # red value for this color
   getter red : Int32
@@ -180,6 +199,8 @@ module Term
     strike = false,
     overline = false
   )
+    return string unless enabled?
+
     fore = fore.is_a?(Symbol) ?
       Term::Color.color(fore) :
       fore
