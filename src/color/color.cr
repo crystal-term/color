@@ -7,6 +7,8 @@ module Term
 
   @@enabled : Bool? = nil
 
+  # Color strips only SGR color/style sequences; use `Term::Cursor.strip_ansi`
+  # when non-color terminal escape sequences should be removed too.
   ANSI_COLOR_REGEXP = /\x1b+(\[|\[\[)[0-9;:?]+m/m
 
   def self.enabled? : Bool
