@@ -121,13 +121,18 @@ module Term
   {% for operator in ['+', '-', '*', '/'] %}
   def {{ operator.id }}(other : Term::Color)
     arr = self.to_tuple.zip(other.to_tuple).map do |(a, b)|
-      num = a * b
+      {% if operator == '/' %}
+        # Division by zero produces zero for that channel to keep clamp semantics.
+        num = b == 0 ? 0 : a / b
+      {% else %}
+        num = a {{ operator.id }} b
+      {% end %}
       num = 0 if num < 0
       num = 255 if num > 255
-      num
+      num.to_i
     end
 
-    new(arr[0], arr[1], arr[2], arr[3])
+    Term::Color.new(arr[0], arr[1], arr[2], arr[3])
   end
   {% end %}
 
