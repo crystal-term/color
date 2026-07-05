@@ -212,7 +212,7 @@ module Term
   # Set the green value for this color
   def green=(value)
     value = validate_color(value)
-    @red = value
+    @green = value
   end
 
   # Set the blue value for this color
