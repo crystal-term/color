@@ -101,4 +101,14 @@ describe Term::Color do
       color.inverse.to_tuple.should eq({0, 119, 255, 127})
     end
   end
+
+  describe "#pretty_inspect" do
+    it "pretty prints repeatedly without indexing past the color table" do
+      color = Term::Color.new(255, 136, 0, 127)
+
+      50.times do
+        color.pretty_inspect.should_not be_empty
+      end
+    end
+  end
 end
