@@ -111,4 +111,18 @@ describe Term::Color do
       end
     end
   end
+
+  describe "#to_s" do
+    it "uses the Term::Color name" do
+      Term::Color.new(1, 2, 3, 4).to_s.should eq("Term::Color{1, 2, 3, 4}")
+    end
+  end
+
+  describe ".color" do
+    it "mentions the color table when a color is unknown" do
+      expect_raises(Exception, "the color missing has not been defined in `Term::Color::Colors::COLORS`") do
+        Term::Color.color(:missing)
+      end
+    end
+  end
 end

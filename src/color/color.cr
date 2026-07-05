@@ -19,7 +19,7 @@ module Term
   # alpha (opacity) value for this color
   getter alpha : Int32
 
-  # Creates a new `Cor` instance from `red`, `green`, `blue`
+  # Creates a new `Term::Color` instance from `red`, `green`, `blue`
   # and `alpha` values.
   def initialize(red, green, blue, alpha = 255)
     red = validate_color(red)
@@ -30,7 +30,7 @@ module Term
     @red, @green, @blue, @alpha = red, green, blue, alpha
   end
 
-  # Creates a new `Cor` instance from a hex string.
+  # Creates a new `Term::Color` instance from a hex string.
   def self.new(hex : String)
     hex = hex.gsub(/^#/, "")
 
@@ -62,13 +62,13 @@ module Term
   end
 
   # Gets one of the many color values defined in `COLORS`
-  # as a `Cor` instance.
+  # as a `Term::Color` instance.
   def self.color(color)
-    raise "the color #{color} has not been defined in `Cor`" unless COLORS.has_key?(color)
+    raise "the color #{color} has not been defined in `Term::Color::Colors::COLORS`" unless COLORS.has_key?(color)
     new(*COLORS[color])
   end
 
-  # Create a new `Cor` instance from hue, saturation, and value.
+  # Create a new `Term::Color` instance from hue, saturation, and value.
   def self.from_hsv(h, s, v)
     h, s, v = h.to_f/360, s.to_f/100, v.to_f/100
     h_i = (h*6).to_i
@@ -89,7 +89,7 @@ module Term
     )
   end
 
-  # Create a new `Cor` instance from hue, saturation, and lightness.
+  # Create a new `Term::Color` instance from hue, saturation, and lightness.
   def self.from_hsl(h, s, l)
     m2 = if l <= 0.5
       l * (s + 1)
@@ -108,12 +108,12 @@ module Term
     new(rgb[0], rgb[1], rgb[2])
   end
 
-  # Create a new `Cor` instance from hue, saturation, and brightness.
+  # Create a new `Term::Color` instance from hue, saturation, and brightness.
   def self.from_hsb(h, s, b)
     Term::Color.from_hsl(h, s, b)
   end
 
-  # Implements the comparison operator for `Cor`.
+  # Implements the comparison operator for `Term::Color`.
   def <=>(other)
     self.to_a <=> other.to_a
   end
@@ -136,7 +136,7 @@ module Term
   end
   {% end %}
 
-  # Outputs this `Cor` instance as a `hex` string.
+  # Outputs this `Term::Color` instance as a `hex` string.
   def hex_string(prefix = false, alpha = false, upcase = false)
     hex = String.build do |str|
       str << "#" if prefix
@@ -147,7 +147,7 @@ module Term
     hex
   end
 
-  # Outputs this `Cor` instance as a css `rgb(a)` string.
+  # Outputs this `Term::Color` instance as a css `rgb(a)` string.
   def rgb_string(alpha = false)
     String.build do |str|
       str << "rgb"
@@ -166,7 +166,7 @@ module Term
 
   # Converts `string` to an ANSI escape sequence for use with
   # truecolor enabled terminals. `fore` and
-  # `back` can be either a `Cor` instance or
+  # `back` can be either a `Term::Color` instance or
   # a symbol representing a `COLORS` value.
   def self.truecolor_string(
     string : String,
@@ -244,7 +244,7 @@ module Term
     end
   end
 
-  # Returns a new `Cor` that's the inverse of self.
+  # Returns a new `Term::Color` that's the inverse of self.
   def inverse
     inverted = ((@red << 16) | (@green << 8) | @blue) ^ 0xffffff
     Term::Color.new(
@@ -335,17 +335,17 @@ module Term
     {h: hsl[:h], s: hsl[:s], b: hsl[:l]}
   end
 
-  # Convert the `Cor` to an array.
+  # Convert the `Term::Color` to an array.
   def to_a
     [@red, @green, @blue, @alpha]
   end
 
-  # Convert the `Cor` to a tuple.
+  # Convert the `Term::Color` to a tuple.
   def to_tuple
     {@red, @green, @blue, @alpha}
   end
 
-  # Convert the `Cor` to a hash.
+  # Convert the `Term::Color` to a hash.
   def to_h
     {
       "red" => @red,
@@ -357,7 +357,7 @@ module Term
 
   # Convert to a string
   def to_s
-    "Cor{#{@red}, #{@green}, #{blue}, #{@alpha}}"
+    "Term::Color{#{@red}, #{@green}, #{@blue}, #{@alpha}}"
   end
 
   # Pretty print (it's a rainbow!)
@@ -370,7 +370,7 @@ module Term
       end.join
     end
 
-    pp.text(rainbow.call("#<Cor: @red: #{@red}, @green: #{green}, @blue: #{blue}, @alpha: #{@alpha}>"))
+    pp.text(rainbow.call("#<Term::Color: @red: #{@red}, @green: #{@green}, @blue: #{@blue}, @alpha: #{@alpha}>"))
   end
 
   # Strip ANSI color codes from a string.
